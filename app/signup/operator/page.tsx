@@ -14,66 +14,62 @@ export default function OperatorSignUpPage() {
   const [mandiName, setMandiName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
-    try {
-      const { data: authData, error: authError } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: { full_name: fullName, role: 'operator', mandi_name: mandiName }
+    // 1. Create the Auth User with metadata
+    const { data, error: authError } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { 
+          full_name: fullName,
+          mandi_name: mandiName,
+          role: 'operator' 
         }
-      });
-
-      if (authError) throw authError;
-
-      if (authData.user) {
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .insert([{
-            id: authData.user.id,
-            full_name: fullName,
-            role: 'operator',
-          }]);
-
-        if (profileError) throw profileError;
-
-        setSuccess(true);
-        setTimeout(() => router.push('/login'), 2000);
       }
-    } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : 'An error occurred during sign up';
-      setError(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  };
+    });
 
-  if (success) {
-    return (
-      <div className="min-h-screen bg-blue-50 flex flex-col items-center justify-center p-4">
-        <div className="text-center">
-          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <UserPlus className="h-8 w-8 text-blue-600" />
-          </div>
-          <h2 className="text-2xl font-bold text-blue-900 mb-2">Account Created!</h2>
-          <p className="text-slate-600">Redirecting you to login...</p>
-        </div>
-      </div>
-    );
-  }
+    if (authError) {
+      setError(authError.message);
+      setLoading(false);
+      return;
+    }
+
+    if (data.user) {
+      // 2. Wait for Trigger (Essential for Hackathons)
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      // 3. Verify Profile was created successfully
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', data.user.id)
+        .single();
+
+      if (profile?.role === 'operator') {
+        // Use window.location for a "hard" redirect to ensure Sidebar loads correctly
+        window.location.assign('/operator');
+      } else {
+        console.error("Profile check failed:", profileError);
+        setError("Account created, but database sync is slow. Please try Logging In.");
+        
+        // Fallback: If profile isn't there yet, redirect to login so they can try again
+        setTimeout(() => router.push('/login'), 3000);
+      }
+    }
+    setLoading(false);
+  };
 
   return (
     <div className="min-h-screen bg-blue-50 flex flex-col items-center justify-center p-4">
       <div className="mb-6 flex flex-col items-center">
         <Link href="/" className="flex items-center gap-2 mb-4">
           <Sprout className="h-10 w-10 text-blue-600" />
-          <span className="text-2xl font-bold text-blue-900 tracking-tight">KRISHI-VERIFY</span>
+          <span className="text-2xl font-bold text-blue-900 tracking-tight text-center">KRISHI-VERIFY</span>
         </Link>
         <h2 className="text-xl font-medium text-slate-800 text-center">Operator Registration</h2>
       </div>
@@ -107,7 +103,7 @@ export default function OperatorSignUpPage() {
             <label className="text-sm font-semibold text-slate-700">Mandi Name</label>
             <input
               type="text"
-              placeholder="Enter your mandi name"
+              placeholder="e.g. Punjab Central Mandi"
               className="w-full p-3 rounded-lg border border-blue-100 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
               value={mandiName}
               onChange={(e) => setMandiName(e.target.value)}
@@ -119,7 +115,7 @@ export default function OperatorSignUpPage() {
             <label className="text-sm font-semibold text-slate-700">Email</label>
             <input
               type="email"
-              placeholder="Enter your email"
+              placeholder="operator@mandi.gov.in"
               className="w-full p-3 rounded-lg border border-blue-100 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -131,7 +127,7 @@ export default function OperatorSignUpPage() {
             <label className="text-sm font-semibold text-slate-700">Password</label>
             <input
               type="password"
-              placeholder="Create a password"
+              placeholder="••••••••"
               className="w-full p-3 rounded-lg border border-blue-100 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -140,12 +136,16 @@ export default function OperatorSignUpPage() {
             />
           </div>
 
-          {error && <p className="text-sm text-red-500 bg-red-50 p-2 rounded border border-red-100">{error}</p>}
+          {error && (
+            <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-xs text-red-600 font-medium">{error}</p>
+            </div>
+          )}
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-4 rounded-lg font-bold text-white shadow-lg transition-all flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700"
+            className="w-full py-4 rounded-lg font-bold text-white shadow-lg transition-all flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300"
           >
             {loading ? <Loader2 className="animate-spin" /> : <><UserPlus size={18} /> Create Operator Account</>}
           </button>

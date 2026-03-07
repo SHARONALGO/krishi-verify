@@ -4,23 +4,50 @@ import { useState } from 'react';
 import { Sprout, UserPlus, Loader2, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabaseClient';
-import { useRouter } from 'next/navigation';
 
 export default function FarmerSignUpPage() {
-  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
+  const [redirecting, setRedirecting] = useState(false);
+
+  // Pre-check: Verify if email is already in use
+  const checkEmailExists = async (email: string): Promise<boolean> => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('email', email)
+        .single();
+      
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error checking email:', error);
+      }
+      
+      return !!data;
+    } catch {
+      return false;
+    }
+  };
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
+    let authSuccess = false;
+    let userId: string | null = null;
+
     try {
+      // Pre-check: Verify email is not already in use
+      const emailExists = await checkEmailExists(email);
+      if (emailExists) {
+        throw new Error('An account with this email already exists. Please sign in instead.');
+      }
+
+      // Step 1: Sign up the user
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
@@ -29,39 +56,80 @@ export default function FarmerSignUpPage() {
         }
       });
 
-      if (authError) throw authError;
+      if (authError) {
+        // Handle specific Supabase auth errors
+        if (authError.message.includes('already registered')) {
+          throw new Error('An account with this email already exists. Please sign in instead.');
+        }
+        throw authError;
+      }
 
-      if (authData.user) {
+      if (!authData.user) {
+        throw new Error('Failed to create account. Please try again.');
+      }
+
+      authSuccess = true;
+      userId = authData.user.id;
+
+      // Step 2: Create profile (non-critical, can fail without breaking auth)
+      try {
         const { error: profileError } = await supabase
           .from('profiles')
           .insert([{
-            id: authData.user.id,
+            id: userId,
             full_name: fullName,
             role: 'farmer',
+            email: email,
           }]);
 
-        if (profileError) throw profileError;
-
-        setSuccess(true);
-        setTimeout(() => router.push('/login'), 2000);
+        if (profileError) {
+          console.warn('Profile creation warning (non-critical):', profileError);
+          // Don't throw - auth succeeded, profile can be created later
+        }
+      } catch (profileErr) {
+        console.warn('Profile creation failed (non-critical):', profileErr);
+        // Don't throw - auth succeeded, profile can be created later
       }
+
+      // Step 3: Set session persistence before redirect
+      // This ensures the Sidebar sees the user immediately
+      const { error: sessionError } = await supabase.auth.getSession();
+      if (sessionError) {
+        console.warn('Session check warning:', sessionError);
+      }
+
+      // Step 4: Show redirecting state and redirect
+      setRedirecting(true);
+      
+      // Small delay to show the redirecting state
+      setTimeout(() => {
+        // Use window.location.assign for hard redirect (prevents Turbopack lock error)
+        window.location.assign('/farmer');
+      }, 1000);
+
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'An error occurred during sign up';
       setError(errorMessage);
-    } finally {
+      
+      // Cleanup: If auth succeeded but something else failed, log it but don't leave UI broken
+      if (authSuccess && userId) {
+        console.warn('Auth succeeded but post-signup failed for user:', userId);
+        // User can still log in later, so we don't need to delete them
+      }
+      
       setLoading(false);
     }
   };
 
-  if (success) {
+  if (redirecting) {
     return (
       <div className="min-h-screen bg-emerald-50 flex flex-col items-center justify-center p-4">
         <div className="text-center">
           <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <UserPlus className="h-8 w-8 text-emerald-600" />
+            <Loader2 className="h-8 w-8 text-emerald-600 animate-spin" />
           </div>
-          <h2 className="text-2xl font-bold text-emerald-900 mb-2">Account Created!</h2>
-          <p className="text-sage-600">Redirecting you to login...</p>
+          <h2 className="text-2xl font-bold text-emerald-900 mb-2">Welcome to KRISHI-VERIFY!</h2>
+          <p className="text-sage-600">Setting up your farmer dashboard...</p>
         </div>
       </div>
     );

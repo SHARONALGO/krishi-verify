@@ -13,7 +13,8 @@ import {
   Settings,
   Home,
   LogIn,
-  LogOut
+  LogOut,
+  Calendar
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useUser } from '@/hooks/use-user';
@@ -22,6 +23,7 @@ import { supabase } from '@/lib/supabaseClient';
 
 const farmerNavItems = [
   { href: '/farmer', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/farmer/book-slots', label: 'Book Slots', icon: Calendar },
   { href: '/farmer/history', label: 'My History', icon: History },
   { href: '/farmer/calculator', label: 'MSP Calculator', icon: Calculator },
   { href: '/farmer/profile', label: 'My Profile', icon: User },

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { DigitalReceipt } from '@/components/farming/DigitalReceipt';
 import { QRCodeDisplay } from '@/components/farming/QRCodeDisplay';
 import { DashboardStats } from '@/components/farming/DashboardStats';
+import { MandiPrices } from '@/components/farming/MandiPrices';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Sprout, TrendingUp, Calendar, MapPin, Bell } from 'lucide-react';
 import type { CropEntry } from '@/lib/types';
@@ -112,6 +113,11 @@ export default function FarmerPage() {
         totalEarnings={totalEarnings}
         averageMSP={averageMSP}
       />
+
+      {/* Live Mandi Prices Section */}
+      <div className="mt-8">
+        <MandiPrices />
+      </div>
 
       <div className="grid gap-6 lg:grid-cols-3 mt-8">
         {/* Recent Receipts */}
