@@ -45,8 +45,9 @@ export default function FarmerSignUpPage() {
         setSuccess(true);
         setTimeout(() => router.push('/login'), 2000);
       }
-    } catch (err: any) {
-      setError(err.message || 'An error occurred during sign up');
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'An error occurred during sign up';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

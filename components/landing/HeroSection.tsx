@@ -23,9 +23,9 @@ export function HeroSection() {
         <div className="absolute inset-0 bg-black/40"></div>
         
         {/* Content Overlay */}
-        <div className="absolute inset-0 flex flex-col justify-center">
+        <div className="absolute inset-0 flex flex-col justify-center items-center">
           <div className="container px-4 md:px-6 relative z-10">
-            <div className="space-y-6 max-w-2xl">
+            <div className="space-y-6 max-w-3xl mx-auto text-center">
               <div className="inline-flex items-center rounded-full border border-white/80 bg-white/10 backdrop-blur px-4 py-2 text-sm font-medium text-white">
                 <Shield className="mr-2 h-4 w-4" />
                 Transparent Agricultural Marketplace
@@ -36,12 +36,12 @@ export function HeroSection() {
                 <span className="text-emerald-300">Farmer</span>
               </h1>
               
-              <p className="max-w-[600px] text-white/90 md:text-lg leading-relaxed">
+              <p className="max-w-[600px] mx-auto text-white/90 md:text-lg leading-relaxed">
                 KRISHI-VERIFY ensures transparent MSP procurement with blockchain-inspired security. 
                 Real-time price tracking, immutable records, and guaranteed fair pricing for agricultural produce.
               </p>
               
-              <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <div className="flex flex-col sm:flex-row gap-4 pt-4 justify-center">
                 <Link href="/login">
                   <Button size="lg" className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700">
                     <LogIn className="mr-2 h-5 w-5" />
@@ -49,7 +49,7 @@ export function HeroSection() {
                   </Button>
                 </Link>
                 <Link href="/signup">
-                  <Button variant="outline" size="lg" className="w-full sm:w-auto border-white/50 text-white hover:bg-white/20">
+                  <Button size="lg" className="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600">
                     <UserPlus className="mr-2 h-5 w-5" />
                     Sign Up
                   </Button>
