@@ -1,8 +1,7 @@
 'use client';
 
-import { Shield, Sprout, Lock, TrendingUp, MessageSquare, Check } from 'lucide-react';
+import { Shield, Sprout, Lock, TrendingUp, MessageSquare, Check, LogIn, UserPlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
 
 export function HeroSection() {
@@ -43,16 +42,16 @@ export function HeroSection() {
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                <Link href="/operator">
+                <Link href="/login">
                   <Button size="lg" className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700">
-                    <Sprout className="mr-2 h-5 w-5" />
-                    For Operators
+                    <LogIn className="mr-2 h-5 w-5" />
+                    Sign In
                   </Button>
                 </Link>
-                <Link href="/farmer">
+                <Link href="/signup">
                   <Button variant="outline" size="lg" className="w-full sm:w-auto border-white/50 text-white hover:bg-white/20">
-                    <Shield className="mr-2 h-5 w-5" />
-                    For Farmers
+                    <UserPlus className="mr-2 h-5 w-5" />
+                    Sign Up
                   </Button>
                 </Link>
               </div>

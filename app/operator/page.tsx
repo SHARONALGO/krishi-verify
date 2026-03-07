@@ -1,5 +1,4 @@
 'use client';
-
 import { useState } from 'react';
 import { CropEntryForm } from '@/components/operator/CropEntryForm';
 import { AutoMSPCalculator } from '@/components/operator/AutoMSPCalculator';
@@ -96,10 +95,10 @@ export default function OperatorPage() {
   };
 
   return (
-    <div className="container px-4 md:px-6 py-8">
+    <div className="px-4 md:px-6 py-8 bg-slate-50 min-h-screen">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-emerald-900 mb-2">Operator Portal</h1>
-        <p className="text-forest-700">
+        <h1 className="text-3xl font-bold text-blue-900 mb-2">Operator Portal</h1>
+        <p className="text-slate-600">
           Enter location and crop details to generate tamper-proof receipts for farmers.
         </p>
       </div>

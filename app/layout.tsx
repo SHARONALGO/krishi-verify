@@ -2,8 +2,14 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
-import { Navigation } from "@/components/layout/Navigation";
+import { Sidebar } from "@/components/layout/Sidebar";
 import { Footer } from "@/components/layout/Footer";
+
+export const metadata: Metadata = {
+  title: "KRISHI-VERIFY - Decentralized MSP Transparency Platform",
+  description: "Farmer-owned data platform ensuring tamper-proof procurement transparency",
+  keywords: ["agriculture", "blockchain", "MSP", "transparency", "farmers"],
+};
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,12 +21,6 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "KRISHI-VERIFY - Decentralized MSP Transparency Platform",
-  description: "Farmer-owned data platform ensuring tamper-proof procurement transparency",
-  keywords: ["agriculture", "blockchain", "MSP", "transparency", "farmers"],
-};
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -28,12 +28,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}>
         <Header />
         <div className="flex flex-1">
-          <Navigation />
+          <Sidebar />
           <main className="flex-1 md:ml-64 pb-20 md:pb-0">
             {children}
           </main>
