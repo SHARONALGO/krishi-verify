@@ -1,5 +1,8 @@
 export interface CropEntry {
   id: string;
+  state: string;     // Add this
+  district: string;  // Add this
+  market: string;    // Add this
   cropType: string;
   weight: number;
   moisturePercentage: number;
@@ -8,7 +11,6 @@ export interface CropEntry {
   hash: string;
   merkleRoot: string;
 }
-
 export interface FarmerDashboardData {
   totalTransactions: number;
   totalEarnings: number;
