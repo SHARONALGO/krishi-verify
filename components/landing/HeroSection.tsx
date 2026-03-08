@@ -1,10 +1,14 @@
 'use client';
 
-import { Shield, Sprout, Lock, TrendingUp, MessageSquare, Check, LogIn, UserPlus } from 'lucide-react';
+import { Shield, Sprout, Lock, TrendingUp, MessageSquare, Check, LogIn, UserPlus, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { useUser } from '@/hooks/use-user';
 
 export function HeroSection() {
+  const { profile, role } = useUser();
+  const isLoggedIn = !!profile;
+  
   return (
     <section className="relative overflow-hidden py-0 bg-gradient-to-b from-emerald-50 to-white">
       {/* Video Banner Background */}
@@ -14,7 +18,7 @@ export function HeroSection() {
           muted
           loop
           playsInline
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover object-center"
           poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 600'%3E%3Crect fill='%23047857' width='1200' height='600'/%3E%3C/svg%3E"
         >
           <source src="https://agri.punjab.gov.in/frontend/images/banner/banner_video.mp4" type="video/mp4" />
@@ -23,9 +27,9 @@ export function HeroSection() {
         <div className="absolute inset-0 bg-black/40"></div>
         
         {/* Content Overlay */}
-        <div className="absolute inset-0 flex flex-col justify-center items-center">
-          <div className="container px-4 md:px-6 relative z-10">
-            <div className="space-y-6 max-w-3xl mx-auto text-center">
+        <div className="absolute inset-0 flex flex-col justify-center">
+          <div className="container px-4 md:px-6 lg:px-12 relative z-10">
+            <div className="space-y-6 max-w-3xl text-left">
               <div className="inline-flex items-center rounded-full border border-white/80 bg-white/10 backdrop-blur px-4 py-2 text-sm font-medium text-white">
                 <Shield className="mr-2 h-4 w-4" />
                 Transparent Agricultural Marketplace
@@ -36,24 +40,37 @@ export function HeroSection() {
                 <span className="text-emerald-300">Farmer</span>
               </h1>
               
-              <p className="max-w-[600px] mx-auto text-white/90 md:text-lg leading-relaxed">
+              <p className="max-w-[600px] text-white/90 md:text-lg leading-relaxed">
                 KRISHI-VERIFY ensures transparent MSP procurement with blockchain-inspired security. 
                 Real-time price tracking, immutable records, and guaranteed fair pricing for agricultural produce.
               </p>
               
-              <div className="flex flex-col sm:flex-row gap-4 pt-4 justify-center">
-                <Link href="/login">
-                  <Button size="lg" className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700">
-                    <LogIn className="mr-2 h-5 w-5" />
-                    Sign In
-                  </Button>
-                </Link>
-                <Link href="/signup">
-                  <Button size="lg" className="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600">
-                    <UserPlus className="mr-2 h-5 w-5" />
-                    Sign Up
-                  </Button>
-                </Link>
+              <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                {isLoggedIn ? (
+                  // Show Go to Dashboard button for logged-in users
+                  <Link href={role === 'farmer' ? '/farmer' : '/operator'}>
+                    <Button size="lg" className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700">
+                      <ArrowRight className="mr-2 h-5 w-5" />
+                      Go to Dashboard
+                    </Button>
+                  </Link>
+                ) : (
+                  // Show Sign In/Sign Up for non-logged-in users
+                  <>
+                    <Link href="/login">
+                      <Button size="lg" className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700">
+                        <LogIn className="mr-2 h-5 w-5" />
+                        Sign In
+                      </Button>
+                    </Link>
+                    <Link href="/signup">
+                      <Button size="lg" className="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600">
+                        <UserPlus className="mr-2 h-5 w-5" />
+                        Sign Up
+                      </Button>
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </div>

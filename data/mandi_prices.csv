@@ -1,0 +1,64 @@
+State,District,Market,Commodity,Variety,Grade,Arrival_Date,Min Price,Max Price,Modal Price
+Rajasthan,Jodhpur,Jodhpur Mandi,Wheat,Local,FAQ,2025-01-15,7800,8200,8000
+Rajasthan,Jodhpur,Jodhpur Mandi,Rice,Basmati,FAQ,2025-01-15,4500,5500,5000
+Rajasthan,Jodhpur,Jodhpur Mandi,Maize,Yellow,FAQ,2025-01-15,1800,2200,2000
+Rajasthan,Jodhpur,Jodhpur Mandi,Cotton,Local,FAQ,2025-01-15,5800,6200,6000
+Rajasthan,Jodhpur,Jodhpur Mandi,Mustard,Local,FAQ,2025-01-15,5200,5600,5400
+Rajasthan,Jodhpur,Jodhpur Mandi,Soyabean,Local,FAQ,2025-01-15,4800,5200,5000
+Rajasthan,Jodhpur,Jodhpur Mandi,Groundnut,Local,FAQ,2025-01-15,5400,5800,5600
+Punjab,Ludhiana,Ludhiana Mandi,Wheat,Local,FAQ,2025-01-15,7900,8300,8100
+Punjab,Ludhiana,Ludhiana Mandi,Rice,Basmati,FAQ,2025-01-15,4600,5600,5100
+Punjab,Ludhiana,Ludhiana Mandi,Maize,Yellow,FAQ,2025-01-15,1850,2250,2050
+Punjab,Ludhiana,Ludhiana Mandi,Cotton,Local,FAQ,2025-01-15,5900,6300,6100
+Punjab,Ludhiana,Ludhiana Mandi,Barley,Local,FAQ,2025-01-15,2400,2800,2600
+Haryana,Hisar,Hisar Mandi,Wheat,Local,FAQ,2025-01-15,7850,8250,8050
+Haryana,Hisar,Hisar Mandi,Rice,Common,FAQ,2025-01-15,4400,5400,4900
+Haryana,Hisar,Hisar Mandi,Maize,Yellow,FAQ,2025-01-15,1820,2220,2020
+Haryana,Hisar,Hisar Mandi,Bajra,Local,FAQ,2025-01-15,2200,2600,2400
+Haryana,Hisar,Hisar Mandi,Guar,Local,FAQ,2025-01-15,3800,4200,4000
+Madhya Pradesh,Indore,Indore Mandi,Wheat,Local,FAQ,2025-01-15,7750,8150,7950
+Madhya Pradesh,Indore,Indore Mandi,Soyabean,Local,FAQ,2025-01-15,4700,5100,4900
+Madhya Pradesh,Indore,Indore Mandi,Maize,Yellow,FAQ,2025-01-15,1780,2180,1980
+Madhya Pradesh,Indore,Indore Mandi,Urad,Local,FAQ,2025-01-15,6200,6600,6400
+Madhya Pradesh,Indore,Indore Mandi,Moong,Local,FAQ,2025-01-15,8400,8800,8600
+Uttar Pradesh,Agra,Agra Mandi,Wheat,Local,FAQ,2025-01-15,7820,8220,8020
+Uttar Pradesh,Agra,Agra Mandi,Rice,Common,FAQ,2025-01-15,4450,5450,4950
+Uttar Pradesh,Agra,Agra Mandi,Potato,Local,FAQ,2025-01-15,1200,1600,1400
+Uttar Pradesh,Agra,Agra Mandi,Onion,Local,FAQ,2025-01-15,2500,2900,2700
+Uttar Pradesh,Agra,Agra Mandi,Tomato,Local,FAQ,2025-01-15,1800,2200,2000
+Gujarat,Rajkot,Rajkot Mandi,Cotton,Local,FAQ,2025-01-15,5850,6250,6050
+Gujarat,Rajkot,Rajkot Mandi,Groundnut,Local,FAQ,2025-01-15,5450,5850,5650
+Gujarat,Rajkot,Rajkot Mandi,Castor,Local,FAQ,2025-01-15,4200,4600,4400
+Gujarat,Rajkot,Rajkot Mandi,Cumin,Local,FAQ,2025-01-15,18000,19000,18500
+Maharashtra,Nagpur,Nagpur Mandi,Soyabean,Local,FAQ,2025-01-15,4750,5150,4950
+Maharashtra,Nagpur,Nagpur Mandi,Cotton,Local,FAQ,2025-01-15,5820,6220,6020
+Maharashtra,Nagpur,Nagpur Mandi,Tur,Local,FAQ,2025-01-15,6800,7200,7000
+Maharashtra,Nagpur,Nagpur Mandi,Jowar,Local,FAQ,2025-01-15,2800,3200,3000
+Karnataka,Bangalore,Bangalore Mandi,Ragi,Local,FAQ,2025-01-15,3200,3600,3400
+Karnataka,Bangalore,Bangalore Mandi,Maize,Yellow,FAQ,2025-01-15,1880,2280,2080
+Karnataka,Bangalore,Bangalore Mandi,Onion,Local,FAQ,2025-01-15,2550,2950,2750
+Karnataka,Bangalore,Bangalore Mandi,Tomato,Local,FAQ,2025-01-15,1850,2250,2050
+Andhra Pradesh,Guntur,Guntur Mandi,Chillies,Local,FAQ,2025-01-15,12000,13000,12500
+Andhra Pradesh,Guntur,Guntur Mandi,Cotton,Local,FAQ,2025-01-15,5880,6280,6080
+Andhra Pradesh,Guntur,Guntur Mandi,Turmeric,Local,FAQ,2025-01-15,7800,8200,8000
+Telangana,Hyderabad,Hyderabad Mandi,Rice,Sona Masuri,FAQ,2025-01-15,4800,5800,5300
+Telangana,Hyderabad,Hyderabad Mandi,Cotton,Local,FAQ,2025-01-15,5900,6300,6100
+Telangana,Hyderabad,Hyderabad Mandi,Red Chilli,Local,FAQ,2025-01-15,11500,12500,12000
+Tamil Nadu,Coimbatore,Coimbatore Mandi,Rice,IR 20,FAQ,2025-01-15,4200,5200,4700
+Tamil Nadu,Coimbatore,Coimbatore Mandi,Cotton,Local,FAQ,2025-01-15,5920,6320,6120
+Tamil Nadu,Coimbatore,Coimbatore Mandi,Groundnut,Local,FAQ,2025-01-15,5480,5880,5680
+Bihar,Patna,Patna Mandi,Rice,Common,FAQ,2025-01-15,4350,5350,4850
+Bihar,Patna,Patna Mandi,Wheat,Local,FAQ,2025-01-15,7780,8180,7980
+Bihar,Patna,Patna Mandi,Maize,Yellow,FAQ,2025-01-15,1760,2160,1960
+West Bengal,Kolkata,Kolkata Mandi,Rice,Gobindobhog,FAQ,2025-01-15,5200,6200,5700
+West Bengal,Kolkata,Kolkata Mandi,Potato,Local,FAQ,2025-01-15,1150,1550,1350
+West Bengal,Kolkata,Kolkata Mandi,Jute,Local,FAQ,2025-01-15,4200,4600,4400
+Odisha,Bhubaneswar,Bhubaneswar Mandi,Rice,Swarna,FAQ,2025-01-15,4100,5100,4600
+Odisha,Bhubaneswar,Bhubaneswar Mandi,Cotton,Local,FAQ,2025-01-15,5860,6260,6060
+Odisha,Bhubaneswar,Bhubaneswar Mandi,Groundnut,Local,FAQ,2025-01-15,5420,5820,5620
+Assam,Guwahati,Guwahati Mandi,Rice,Joha,FAQ,2025-01-15,8000,9000,8500
+Assam,Guwahati,Guwahati Mandi,Potato,Local,FAQ,2025-01-15,1100,1500,1300
+Chhattisgarh,Raipur,Raipur Mandi,Rice,Common,FAQ,2025-01-15,4300,5300,4800
+Chhattisgarh,Raipur,Raipur Mandi,Soyabean,Local,FAQ,2025-01-15,4720,5120,4920
+Jharkhand,Ranchi,Ranchi Mandi,Rice,Common,FAQ,2025-01-15,4250,5250,4750
+Jharkhand,Ranchi,Ranchi Mandi,Potato,Local,FAQ,2025-01-15,1180,1580,1380

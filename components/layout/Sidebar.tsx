@@ -30,7 +30,8 @@ const farmerNavItems = [
 ];
 
 const operatorNavItems = [
-  { href: '/operator', label: 'Procurement Desk', icon: ClipboardList },
+  { href: '/operator/procurement', label: 'Procurement Desk', icon: ClipboardList },
+  { href: '/operator', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/operator/analytics', label: 'Mandi Analytics', icon: BarChart3 },
   { href: '/operator/logs', label: 'Merkle Audit Logs', icon: ShieldCheck },
   { href: '/operator/settings', label: 'Settings', icon: Settings },
@@ -56,10 +57,20 @@ export function Sidebar() {
 
   // Public navigation for non-authenticated users
   if (!role) {
+    const isOperatorTheme = pathname?.includes('/operator');
+    const asideClasses = isOperatorTheme 
+      ? 'border-blue-200 bg-blue-50' 
+      : 'border-emerald-200 bg-emerald-50';
+    const headerTextClass = isOperatorTheme ? 'text-blue-600' : 'text-sage-600';
+    const activeClass = isOperatorTheme ? 'bg-blue-100 text-blue-700' : 'bg-emerald-100 text-emerald-700';
+    const hoverClass = isOperatorTheme ? 'text-blue-800 hover:bg-blue-100 hover:text-blue-800' : 'text-forest-700 hover:bg-emerald-50 hover:text-emerald-700';
+    const bannerBgClass = isOperatorTheme ? 'bg-blue-100' : 'bg-emerald-100';
+    const bannerTextClass = isOperatorTheme ? 'text-blue-700' : 'text-emerald-700';
+
     return (
-      <aside className="hidden md:flex w-64 flex-col border-r border-emerald-200 bg-emerald-50">
+      <aside className={`hidden md:flex w-64 h-full flex-shrink-0 flex-col border-r ${asideClasses} overflow-y-auto`}>
         <div className="p-6">
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-sage-600">
+          <h2 className={`text-xs font-semibold uppercase tracking-wider ${headerTextClass}`}>
             Public
           </h2>
         </div>
@@ -75,9 +86,7 @@ export function Sidebar() {
                 href={item.href}
                 className={cn(
                   'flex items-center gap-3 px-3 py-3 rounded-md text-sm font-medium transition-colors',
-                  isActive 
-                    ? 'bg-emerald-100 text-emerald-700' 
-                    : 'text-forest-700 hover:bg-emerald-50 hover:text-emerald-700'
+                  isActive ? activeClass : hoverClass
                 )}
               >
                 <Icon className="h-5 w-5" />
@@ -87,23 +96,8 @@ export function Sidebar() {
           })}
         </nav>
 
-        <div className="p-4 m-4 space-y-2">
-          <Link href="/login">
-            <Button className="w-full bg-emerald-600 hover:bg-emerald-700">
-              <LogIn className="h-4 w-4 mr-2" />
-              Sign In
-            </Button>
-          </Link>
-          <Link href="/signup">
-            <Button variant="outline" className="w-full border-emerald-300 text-emerald-700 hover:bg-emerald-50">
-              <User className="h-4 w-4 mr-2" />
-              Sign Up
-            </Button>
-          </Link>
-        </div>
-
-        <div className="p-4 m-4 rounded-lg bg-emerald-100">
-          <p className="text-xs text-emerald-700">
+        <div className={`p-4 m-4 rounded-lg ${bannerBgClass}`}>
+          <p className={`text-xs ${bannerTextClass}`}>
             Join KRISHI-VERIFY for transparent MSP procurement
           </p>
         </div>
@@ -133,29 +127,12 @@ export function Sidebar() {
   };
 
   return (
-    <aside className={`hidden md:flex w-64 flex-col border-r ${themeClasses}`}>
-      {/* User Profile Section */}
+    <aside className={`hidden md:flex w-64 h-full flex-shrink-0 flex-col border-r ${themeClasses} overflow-y-auto`}>
+      {/* Portal Title Section */}
       <div className="p-6 border-b border-opacity-20 border-slate-300">
-        <h2 className={`text-xs font-semibold uppercase tracking-wider mb-4 ${isFarmer ? 'text-sage-600' : 'text-blue-300'}`}>
+        <h2 className={`text-xs font-semibold uppercase tracking-wider ${isFarmer ? 'text-sage-600' : 'text-blue-300'}`}>
           {role === 'farmer' ? 'Farmer Portal' : 'Operator Console'}
         </h2>
-        
-        {/* User Avatar and Name */}
-        <div className="flex items-center gap-3">
-          <div className={`w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold ${
-            isFarmer ? 'bg-emerald-200 text-emerald-700' : 'bg-blue-200 text-blue-700'
-          }`}>
-            {profile?.full_name?.charAt(0).toUpperCase() || 'U'}
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className={`font-medium truncate ${isFarmer ? 'text-emerald-900' : 'text-white'}`}>
-              {profile?.full_name || 'User'}
-            </p>
-            <p className={`text-xs capitalize ${isFarmer ? 'text-sage-600' : 'text-blue-300'}`}>
-              {role}
-            </p>
-          </div>
-        </div>
       </div>
       
       <nav className="flex-1 px-4 py-4 space-y-1">

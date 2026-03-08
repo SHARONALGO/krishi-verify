@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌾 Krishi-Verify: Empowering Farmers with Transparency
 
-## Getting Started
+**Krishi-Verify** is a full-stack digital ecosystem designed to bridge the gap between Indian farmers and Government Mandis. It ensures farmers get the **Minimum Support Price (MSP)** they deserve by eliminating middlemen, providing real-time price discovery via a multilingual voice assistant, and digitizing the procurement process.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Key Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 👨‍🌾 For Farmers
+* **Slot Booking:** Avoid long mandi queues by scheduling your visit in advance.
+* **Multilingual Voice Assistant:** Query real-time mandi prices in **English, Hindi, and Punjabi** using voice commands.
+* **What-If Earnings Calculator:** Estimate your payout based on current MSP rates before you even reach the market.
+* **Digital Tokens:** Receive a unique Token ID for a seamless "Check-in" experience.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 🏢 For Mandi Operators
+* **Token-Based Procurement:** Process farmers efficiently using their pre-booked Token IDs.
+* **Quality Grading Desk:** Input actual weight, moisture content, and impurities to calculate precise net payouts.
+* **Digital Receipts:** Automatically generate "verified" digital receipts that serve as proof of sale.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🛠️ Tech Stack
 
-To learn more about Next.js, take a look at the following resources:
+| Technology | Usage |
+| :--- | :--- |
+| **Next.js 15+** | Frontend Framework (App Router) |
+| **Supabase** | Authentication & PostgreSQL Database |
+| **Tailwind CSS** | Styling (Emerald/Sage for Farmers, Teal/Slate for Operators) |
+| **Lucide React** | Iconography |
+| **Web Speech API** | Voice recognition and synthesis |
+| **CSV-Parser** | Rule-based data retrieval engine for Mandi prices |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📁 Project Structure
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```text
+├── app/
+│   ├── api/            # Chatbot and Auth API routes
+│   ├── farmer/         # Farmer Dashboard, Booking, and Calculator
+│   ├── operator/       # Operator Command Center and Grading Desk
+│   └── signup/         # Role-based registration logic
+├── components/
+│   ├── farming/        # VoiceAssistant & Calculator components
+│   └── ui/             # Reusable Shadcn/UI components
+├── lib/
+│   ├── mandiEngine.ts  # Rule-based CSV search logic
+│   └── supabaseClient.ts
+└── data/
+    └── mandi_prices.csv # Real-time commodity price dataset

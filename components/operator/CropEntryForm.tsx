@@ -48,56 +48,56 @@ export function CropEntryForm({
   ];
 
   return (
-    <Card className="border-emerald-100 shadow-sm">
+    <Card className="border-blue-200 shadow-sm">
       <CardHeader>
-        <CardTitle className="flex items-center text-emerald-800">
+        <CardTitle className="flex items-center text-blue-900">
           <Sprout className="mr-2 h-5 w-5" />
-          Procurement Details
+          Procurement Desk
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-blue-600">
           Enter the location and crop data for verified entry
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         
         {/* --- Location Section --- */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-3 bg-emerald-50/50 rounded-lg border border-emerald-100">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-3 bg-blue-50/50 rounded-lg border border-blue-100">
           <div className="space-y-2">
-            <label className="text-xs font-semibold uppercase tracking-wider text-emerald-700">State</label>
+            <label className="text-xs font-semibold uppercase tracking-wider text-blue-700">State</label>
             <div className="relative">
               <Input
                 placeholder="e.g. Punjab"
                 value={state}
                 onChange={(e) => onStateChange(e.target.value)}
-                className="pl-9 h-9 border-emerald-200"
+                className="pl-9 h-9 border-blue-200 focus-visible:ring-blue-600"
               />
-              <MapPin className="absolute left-3 top-2.5 h-4 w-4 text-emerald-600" />
+              <MapPin className="absolute left-3 top-2.5 h-4 w-4 text-blue-600" />
             </div>
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-semibold uppercase tracking-wider text-emerald-700">District</label>
+            <label className="text-xs font-semibold uppercase tracking-wider text-blue-700">District</label>
             <div className="relative">
               <Input
                 placeholder="e.g. Ludhiana"
                 value={district}
                 onChange={(e) => onDistrictChange(e.target.value)}
-                className="pl-9 h-9 border-emerald-200"
+                className="pl-9 h-9 border-blue-200 focus-visible:ring-blue-600"
               />
-              <Building2 className="absolute left-3 top-2.5 h-4 w-4 text-emerald-600" />
+              <Building2 className="absolute left-3 top-2.5 h-4 w-4 text-blue-600" />
             </div>
           </div>
 
           <div className="col-span-full space-y-2">
-            <label className="text-xs font-semibold uppercase tracking-wider text-emerald-700">Mandi / Market Name</label>
+            <label className="text-xs font-semibold uppercase tracking-wider text-blue-700">Mandi / Market Name</label>
             <div className="relative">
               <Input
                 placeholder="Enter Mandi name"
                 value={market}
                 onChange={(e) => onMarketChange(e.target.value)}
-                className="pl-9 h-9 border-emerald-200"
+                className="pl-9 h-9 border-blue-200 focus-visible:ring-blue-600"
               />
-              <Landmark className="absolute left-3 top-2.5 h-4 w-4 text-emerald-600" />
+              <Landmark className="absolute left-3 top-2.5 h-4 w-4 text-blue-600" />
             </div>
           </div>
         </div>
@@ -105,11 +105,11 @@ export function CropEntryForm({
         {/* --- Crop Data Section --- */}
         <div className="space-y-4 pt-2">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-forest-700">Crop Type</label>
+            <label className="text-sm font-medium text-blue-800">Crop Type</label>
             <select
               value={cropType}
               onChange={(e) => onCropTypeChange(e.target.value)}
-              className="flex h-10 w-full rounded-md border border-emerald-300 bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
+              className="flex h-10 w-full rounded-md border border-blue-300 bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
             >
               <option value="">Select crop...</option>
               {cropOptions.map((crop) => (
@@ -119,21 +119,21 @@ export function CropEntryForm({
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-forest-700">Weight (kg)</label>
+            <label className="text-sm font-medium text-blue-800">Weight (kg)</label>
             <div className="relative">
               <Input
                 type="number"
                 placeholder="Enter total weight"
                 value={weight}
                 onChange={(e) => onWeightChange(e.target.value)}
-                className="pl-10 border-emerald-200"
+                className="pl-10 border-blue-200 focus-visible:ring-blue-600"
               />
-              <Weight className="absolute left-3 top-3 h-4 w-4 text-sage-500" />
+              <Weight className="absolute left-3 top-3 h-4 w-4 text-blue-500" />
             </div>
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-forest-700">Moisture Percentage (%)</label>
+            <label className="text-sm font-medium text-blue-800">Moisture Percentage (%)</label>
             <div className="relative">
               <Input
                 type="number"
@@ -141,18 +141,18 @@ export function CropEntryForm({
                 placeholder="Enter moisture %"
                 value={moisture}
                 onChange={(e) => onMoistureChange(e.target.value)}
-                className="pl-10 border-emerald-200"
+                className="pl-10 border-blue-200 focus-visible:ring-blue-600"
               />
-              <Droplets className="absolute left-3 top-3 h-4 w-4 text-sage-500" />
+              <Droplets className="absolute left-3 top-3 h-4 w-4 text-blue-500" />
             </div>
-            <p className="text-[10px] text-sage-600 italic">Target: 12-14% for maximum payout</p>
+            <p className="text-[10px] text-blue-600 italic">Target: 12-14% for maximum payout</p>
           </div>
         </div>
 
         <Button 
           onClick={onCalculate} 
           disabled={!state || !market || !cropType || !weight || !moisture || isCalculating}
-          className="w-full bg-emerald-700 hover:bg-emerald-800 transition-colors"
+          className="w-full bg-blue-700 hover:bg-blue-800 transition-colors"
         >
           {isCalculating ? (
             <>

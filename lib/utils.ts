@@ -59,27 +59,76 @@ export class TransparencyEngine {
   }
 }
 
-export function calculateMSP(cropType: string, weight: number, moisturePercentage: number): number {
-  const baseRates: Record<string, number> = {
-    wheat: 2275,
-    rice: 2040,
-    maize: 1960,
-    bajra: 2150,
-    jowar: 2920,
-    ragi: 3390,
-    cotton: 6020,
-    soyabean: 4625,
-    groundnut: 5650,
-    mustard: 5450,
-  };
+// Official MSP Rates 2025-27 (₹ per Quintal) - CCEA Approved
+export const MSP_RATES_2025_27: Record<string, number> = {
+  wheat: 2585,
+  paddy: 2369,
+  maize: 2400,
+  moong: 8768,
+  mustard: 6200,
+  soyabean: 5328,
+  // Fallback rates for other crops
+  rice: 2369,
+  bajra: 2150,
+  jowar: 2920,
+  ragi: 3390,
+  cotton: 6020,
+  groundnut: 5650,
+};
 
-  const baseRate = baseRates[cropType.toLowerCase()] || 2000;
+export interface MSPBreakdown {
+  basePrice: number;
+  weightInQuintals: number;
+  moistureDeductionPercentage: number;
+  moistureDeductionAmount: number;
+  qualityBonus: number;
+  finalPayout: number;
+}
+
+export function calculateMSP(cropType: string, weight: number, moisturePercentage: number): number {
+  const baseRate = MSP_RATES_2025_27[cropType.toLowerCase()] || 2000;
   
-  const moistureFactor = moisturePercentage > 14 ? 1 - ((moisturePercentage - 14) * 0.02) : 1;
+  // Moisture Deduction: Standard is 14%, deduct 0.75% for every 1% above
+  const moistureDeduction = moisturePercentage > 14 ? (moisturePercentage - 14) * 0.75 : 0;
+  const moistureFactor = Math.max(0, 1 - (moistureDeduction / 100));
   
   const finalAmount = weight * baseRate * moistureFactor;
   
   return Math.round(finalAmount * 100) / 100;
+}
+
+export function calculateMSPWithBreakdown(
+  cropType: string, 
+  weightInKg: number, 
+  moisturePercentage: number,
+  qualityScore: number = 1
+): MSPBreakdown {
+  const basePrice = MSP_RATES_2025_27[cropType.toLowerCase()] || 2000;
+  const weightInQuintals = weightInKg / 100;
+  
+  // Moisture Deduction Calculation
+  const standardMoisture = 14;
+  const excessMoisture = Math.max(0, moisturePercentage - standardMoisture);
+  const moistureDeductionPercentage = excessMoisture * 0.75;
+  
+  // Calculate deduction amount from base
+  const moistureDeductionAmount = (basePrice * weightInQuintals) * (moistureDeductionPercentage / 100);
+  
+  // Quality Bonus (if quality score > 1)
+  const qualityBonus = qualityScore > 1 ? (basePrice * weightInQuintals) * (qualityScore - 1) : 0;
+  
+  // Final Payout
+  const baseAmount = basePrice * weightInQuintals;
+  const finalPayout = baseAmount - moistureDeductionAmount + qualityBonus;
+  
+  return {
+    basePrice,
+    weightInQuintals,
+    moistureDeductionPercentage,
+    moistureDeductionAmount,
+    qualityBonus,
+    finalPayout: Math.round(finalPayout * 100) / 100,
+  };
 }
 
 export function formatCurrency(amount: number): string {

@@ -4,6 +4,10 @@
 const API_KEY = '579b464db66ec23bdd000001ad6573dc2943481c6d4e5b348a42f154';
 const BASE_URL = 'https://api.data.gov.in/resource/35985678-0d79-46b4-9ed6-6f13308a1d24';
 
+// Alternative API endpoint for commodity prices
+const API_KEY_2 = '579b464db66ec23bdd000001f6303db3e4f4451b5adf75fd9b6e8e42';
+const BASE_URL_2 = 'https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070';
+
 export interface MandiPriceRecord {
   // Location Data
   state: string;
@@ -253,4 +257,198 @@ export function getPriceChange(current: number, previous: number): {
     percentChange,
     isPositive: change >= 0,
   };
+}
+
+// ============================================
+// QUALITY-BASED PRICING CALCULATIONS
+// ============================================
+
+export interface QualityParams {
+  grainSize: number; // in mm
+  purityPercentage: number; // 0-100
+  weight: number; // in kg
+  moisture: number; // 0-100
+}
+
+export interface QualityResult {
+  qualityScore: number;
+  grade: 'A' | 'FAQ' | 'B' | 'C';
+  normalizedSize: number;
+  normalizedPurity: number;
+  normalizedWeight: number;
+  normalizedMoisture: number;
+}
+
+// Reference values for normalization
+const REFERENCE = {
+  maxGrainSize: 8, // mm
+  maxPurity: 100, // %
+  maxWeight: 50, // kg (per sample)
+  maxMoisture: 20, // % (above this is poor quality)
+  optimalMoisture: 12, // % (optimal moisture level)
+};
+
+// Weights for quality calculation
+const WEIGHTS = {
+  size: 0.35,
+  purity: 0.30,
+  weight: 0.20,
+  moisture: 0.15,
+};
+
+/**
+ * Normalize input values to 0-1 range
+ */
+function normalizeValue(value: number, max: number): number {
+  return Math.min(value / max, 1);
+}
+
+/**
+ * Normalize moisture (lower is better, optimal is 12%)
+ * Returns a value where 1 = optimal (12%), 0 = very high moisture
+ */
+function normalizeMoisture(moisture: number): number {
+  if (moisture <= REFERENCE.optimalMoisture) {
+    return 1; // Optimal or lower
+  }
+  // Linear decrease from optimal to max
+  const excess = moisture - REFERENCE.optimalMoisture;
+  const maxExcess = REFERENCE.maxMoisture - REFERENCE.optimalMoisture;
+  return Math.max(0, 1 - (excess / maxExcess));
+}
+
+/**
+ * Calculate quality score and grade based on crop parameters
+ * Formula: Q = 0.35*S + 0.30*P + 0.20*W - 0.15*M
+ */
+export function calculateQuality(params: QualityParams): QualityResult {
+  // Normalize values
+  const normalizedSize = normalizeValue(params.grainSize, REFERENCE.maxGrainSize);
+  const normalizedPurity = normalizeValue(params.purityPercentage, REFERENCE.maxPurity);
+  const normalizedWeight = normalizeValue(params.weight, REFERENCE.maxWeight);
+  const normalizedMoisture = normalizeMoisture(params.moisture);
+
+  // Calculate quality score
+  const qualityScore = 
+    (WEIGHTS.size * normalizedSize) +
+    (WEIGHTS.purity * normalizedPurity) +
+    (WEIGHTS.weight * normalizedWeight) -
+    (WEIGHTS.moisture * (1 - normalizedMoisture));
+
+  // Clamp quality score between 0 and 1
+  const clampedScore = Math.max(0, Math.min(1, qualityScore));
+
+  // Assign grade
+  let grade: QualityResult['grade'];
+  if (clampedScore >= 0.80) {
+    grade = 'A';
+  } else if (clampedScore >= 0.65) {
+    grade = 'FAQ';
+  } else if (clampedScore >= 0.50) {
+    grade = 'B';
+  } else {
+    grade = 'C';
+  }
+
+  return {
+    qualityScore: clampedScore,
+    grade,
+    normalizedSize,
+    normalizedPurity,
+    normalizedWeight,
+    normalizedMoisture,
+  };
+}
+
+/**
+ * Calculate final price based on base modal price and quality score
+ * Formula: Price = BasePrice × (1 + Q)
+ */
+export function calculateQualityPrice(basePrice: number, qualityScore: number): number {
+  return basePrice * (1 + qualityScore);
+}
+
+export interface CommodityPriceData {
+  commodity: string;
+  variety: string;
+  grade: string;
+  minPrice: number;
+  maxPrice: number;
+  modalPrice: number;
+}
+
+/**
+ * Fetch commodity price data from local API route (proxies to data.gov.in)
+ * Returns min_price, max_price, modal_price, grade, variety
+ */
+export async function fetchCommodityPrice(commodity: string): Promise<CommodityPriceData | null> {
+  try {
+    // Use local API route to avoid CORS issues
+    const params = new URLSearchParams({
+      'commodity': commodity,
+    });
+
+    const url = `/api/mandi-prices?${params.toString()}`;
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: { 'Accept': 'application/json' },
+    });
+
+    if (!response.ok) {
+      throw new Error(`API Error: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (data.records && data.records.length > 0) {
+      // Get the first record with all price data
+      const record = data.records[0];
+      
+      // Handle both TitleCase and lowercase field names
+      const minPrice = parseFloat(String(record.Min_Price || record.min_price || '0'));
+      const maxPrice = parseFloat(String(record.Max_Price || record.max_price || '0'));
+      const modalPrice = parseFloat(String(record.Modal_Price || record.modal_price || '0'));
+      
+      return {
+        commodity: record.Commodity || record.commodity || commodity,
+        variety: record.Variety || record.variety || 'Other',
+        grade: record.Grade || record.grade || 'FAQ',
+        minPrice,
+        maxPrice,
+        modalPrice,
+      };
+    }
+
+    return null;
+  } catch (error) {
+    console.error('Error fetching commodity price:', error);
+    return null;
+  }
+}
+
+/**
+ * Fetch modal price for a specific commodity from API (legacy function)
+ */
+export async function fetchModalPrice(commodity: string): Promise<number | null> {
+  const data = await fetchCommodityPrice(commodity);
+  return data?.modalPrice || null;
+}
+
+/**
+ * Get grade color for UI display
+ */
+export function getGradeColor(grade: QualityResult['grade']): string {
+  switch (grade) {
+    case 'A':
+      return 'text-emerald-600 bg-emerald-100';
+    case 'FAQ':
+      return 'text-blue-600 bg-blue-100';
+    case 'B':
+      return 'text-amber-600 bg-amber-100';
+    case 'C':
+      return 'text-red-600 bg-red-100';
+    default:
+      return 'text-slate-600 bg-slate-100';
+  }
 }

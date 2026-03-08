@@ -10,6 +10,8 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 // --- Types ---
 interface TimeSlot {
@@ -92,6 +94,7 @@ export default function BookSlotsPage() {
   const [cropType, setCropType] = useState('');
   const [quantity, setQuantity] = useState('');
   const [lastBookingId, setLastBookingId] = useState('');
+  const [isDownloading, setIsDownloading] = useState<string | null>(null);
 
   // Role protection
   useEffect(() => {
@@ -145,6 +148,27 @@ export default function BookSlotsPage() {
     // Reset
     setCropType('');
     setQuantity('');
+  };
+
+  const handleDownloadTicket = async (bookingId: string) => {
+    const ticketElement = document.getElementById(`ticket-${bookingId}`);
+    if (!ticketElement) return;
+
+    try {
+      setIsDownloading(bookingId);
+      const canvas = await html2canvas(ticketElement, { scale: 2 });
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`Krishi_Verify_Ticket_${bookingId}.pdf`);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+    } finally {
+      setIsDownloading(null);
+    }
   };
 
   if (userLoading) return (
@@ -234,7 +258,7 @@ export default function BookSlotsPage() {
         ) : (
           <div className="space-y-4">
             {myBookings.map((b) => (
-              <div key={b.id} className="bg-white rounded-2xl border border-emerald-100 p-6 flex flex-col md:flex-row items-center gap-6 shadow-sm hover:shadow-md transition-all border-l-4 border-l-emerald-600">
+              <div id={`ticket-${b.id}`} key={b.id} className="bg-white rounded-2xl border border-emerald-100 p-6 flex flex-col md:flex-row items-center gap-6 shadow-sm hover:shadow-md transition-all border-l-4 border-l-emerald-600">
                 <div className="flex-1 flex items-center gap-6">
                   <div className="h-16 w-16 bg-emerald-50 rounded-2xl flex items-center justify-center border border-emerald-100">
                     <QrCode className="h-8 w-8 text-emerald-600" />
@@ -259,9 +283,16 @@ export default function BookSlotsPage() {
                    </div>
                 </div>
 
-                <div className="flex flex-col items-center md:items-end gap-2">
+                <div className="flex flex-col items-center md:items-end gap-2" data-html2canvas-ignore="true">
                   <p className="text-[10px] font-mono font-bold text-slate-400 uppercase">Token: {b.id}</p>
-                  <Button variant="outline" className="text-emerald-700 border-emerald-200 hover:bg-emerald-50 font-bold">Download Ticket</Button>
+                  <Button 
+                    variant="outline" 
+                    className="text-emerald-700 border-emerald-200 hover:bg-emerald-50 font-bold"
+                    onClick={() => handleDownloadTicket(b.id)}
+                    disabled={isDownloading === b.id}
+                  >
+                    {isDownloading === b.id ? 'Downloading...' : 'Download Ticket'}
+                  </Button>
                 </div>
               </div>
             ))}

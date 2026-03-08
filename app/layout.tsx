@@ -30,9 +30,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}>
         <Header />
-        <div className="flex flex-1">
+        <div className="flex flex-1 overflow-hidden">
           <Sidebar />
-          <main className="flex-1 md:ml-64 pb-20 md:pb-0">
+          <main className="flex-1 overflow-y-auto pb-20 md:pb-0">
             {children}
           </main>
         </div>

@@ -5,6 +5,7 @@ import { DigitalReceipt } from '@/components/farming/DigitalReceipt';
 import { QRCodeDisplay } from '@/components/farming/QRCodeDisplay';
 import { DashboardStats } from '@/components/farming/DashboardStats';
 import { MandiPrices } from '@/components/farming/MandiPrices';
+import { VoiceAssistant } from '@/components/farming/VoiceAssistant';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Sprout, TrendingUp, Calendar, MapPin, Bell } from 'lucide-react';
 import type { CropEntry } from '@/lib/types';
@@ -218,6 +219,11 @@ export default function FarmerPage() {
           onClose={() => setShowQR(false)}
         />
       )}
+
+      {/* Voice Assistant - Multilingual Chatbot */}
+      <div className="mt-8">
+        <VoiceAssistant />
+      </div>
     </div>
   );
 }
